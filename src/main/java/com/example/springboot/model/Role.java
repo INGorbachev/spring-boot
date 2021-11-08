@@ -3,6 +3,7 @@ package com.example.springboot.model;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -16,6 +17,9 @@ public class Role implements GrantedAuthority {
 
     @Column(name = "name")
     private String nameRole;
+
+    @ManyToMany(mappedBy = "roles")
+    private List<User> users;
 
     public Role() {
 
