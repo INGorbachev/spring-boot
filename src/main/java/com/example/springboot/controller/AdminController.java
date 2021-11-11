@@ -22,7 +22,7 @@ public class AdminController {
 		this.roleService = roleService;
 	}
 
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	@GetMapping("/login")
     public String loginPage() {
         return "login";
     }
