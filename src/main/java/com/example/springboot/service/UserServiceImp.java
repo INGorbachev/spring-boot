@@ -16,25 +16,15 @@ import java.util.Set;
 public class UserServiceImp implements UserService {
 
    private final UserDao userDao;
-   private final RoleDao roleDao;
 
    @Autowired
    public UserServiceImp(UserDao userDao, RoleDao roleDao) {
       this.userDao = userDao;
-      this.roleDao = roleDao;
    }
 
    @Transactional
    @Override
-   public void add(User user, Long[] rolesId) {
-      HashSet<Role> roles = new HashSet<>();
-
-      for(Long id: rolesId) {
-         roles.add(roleDao.getRoleById(id));
-      }
-
-      user.setRoles(roles);
-      user.setPassword(user.getPassword());
+   public void add(User user) {
       userDao.add(user);
    }
 
@@ -53,17 +43,10 @@ public class UserServiceImp implements UserService {
 
    @Transactional
    @Override
-   public void update(User user, Long[] rolesId) {
+   public void update(User user) {
       Set<Role> roles = new HashSet<>();
       User oldUser = userDao.getUserById(user.getId());
 
-      if (rolesId != null) {
-         for (Long id : rolesId) {
-            roles.add(roleDao.getRoleById(id));
-         }
-      } else {
-         roles = oldUser.getRoles();
-      }
 
       user.setPassword(oldUser.getPassword());
       user.setRoles(roles);

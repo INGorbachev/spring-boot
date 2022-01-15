@@ -4,9 +4,14 @@ import com.example.springboot.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import com.example.springboot.model.User;
 import com.example.springboot.service.UserService;
+
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -36,8 +41,14 @@ public class AdminController {
 
 
 	@PostMapping(value = "/admin/add")
-	public String addUser(@ModelAttribute User user, @RequestParam(value = "role") Long[] rolesId){
-		userService.add(user, rolesId);
+//
+	public String addUser(@ModelAttribute("user") @Validated User user, BindingResult bindingResult,
+						  @RequestParam("role") ArrayList<Long> role) {
+		if (bindingResult.hasErrors()) {
+			return "/admin";
+		}
+		user.setRoles(role.stream().map(roleService::getRoleById).collect(Collectors.toSet()));
+		userService.add(user);
 		return "redirect:/admin";
 	}
 
@@ -53,8 +64,14 @@ public class AdminController {
 	}
 
 	@PostMapping(value = "/admin/update")
-	public String updateUser(@ModelAttribute("user") User user, @RequestParam(value = "role", required = false) Long[] rolesId){
-		userService.update(user, rolesId);
+	public String updateUser(@ModelAttribute("user") @Validated User user, BindingResult bindingResult,
+						 @RequestParam("role") ArrayList<Long> role) {
+		if (bindingResult.hasErrors()) {
+			return "/admin";
+		}
+		user.setRoles(role.stream().map(roleService::getRoleById).collect(Collectors.toSet()));
+		userService.update(user);
+
 		return "redirect:/admin";
 	}
 

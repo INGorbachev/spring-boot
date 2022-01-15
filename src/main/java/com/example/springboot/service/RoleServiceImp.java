@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.springboot.dao.*;
 import com.example.springboot.model.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,5 +22,11 @@ public class RoleServiceImp implements RoleService {
     @Override
     public List<Role> getRoles() {
         return roleDao.getRoles();
+    }
+
+    @Override
+    @Transactional
+    public Role getRoleById(Long id) {
+        return roleDao.getRoleById(id);
     }
 }
